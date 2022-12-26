@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
+import WorkoutForm from "../components/WorkoutForm";
 import WorkoutDetails from './../components/WorkoutDetails';
+import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
 
 export default function Home() {
-  const [workouts, setWorkouts] = useState(null);
+  const {workouts, dispatch} =  useWorkoutsContext()
 
   useEffect(() => {
     const fetchWorkout = async () => {
       const response = await fetch("/api/workouts/"); 
       const json = await response.json();
       if (response.ok) {
-        setWorkouts(json);
+        dispatch({type: 'SET_WORKOUTS', payload: json})
       }
     };
 
     fetchWorkout();
-  }, []);
+  },  [dispatch]);
 //  console.log(workouts)
 
   return (
@@ -27,6 +29,7 @@ export default function Home() {
           ))
         }
       </div>
+      <WorkoutForm/>
     </div>
   );
 }
